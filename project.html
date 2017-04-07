@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script>
+        var app = angular.module('app', ['ngStorage']);
+        //controller file;
+        app.controller('my_controller', function ($scope, my_service, $window, $localStorage) {
+            var x = 0;
+            $localStorage.employeDetailsIndexValue = x;
+            my_service.function1().then(function (response) {
+                $localStorage.employeDetails = response.data.employes;
+                $scope.serverObj = response.data.employes[0];
+            });
+            $scope.previous = function () {
+                if (x > 0) {
+                    x = x - 1;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                } else {
+                    x = 4;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                };
+            };
+            $scope.next = function () {
+                if (x <= 3) {
+                    x = x + 1;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                } else {
+                    x = 0;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                };
+            };
+            $scope.viewButton = function (id) {
+                $scope.employeDetailsPopup = $localStorage.employeDetails[id - 1];
+            }
+        });
+
+        //service file
+        app.service('my_service', function ($http) {
+            var obj = this;
+            obj.function1 = function () {
+                return $http.get("tsconfig.json").then(function (response) {
+                    return response;
+                })
+            }
+            return obj;
+        });
+        jQuery(document).ready(function () {
+
+        });
+    </script>
+    <script type="text/javascript">
+        function saveButton() {
+            var fname = document.getElementById('fname').value;
+            var lname = document.getElementById('lname').value;
+            var email = document.getElementById('email').value;
+            var role = document.getElementById('role').value;
+            alert(fname + "-" + lname + "-" + email + "-" + role);
+        };
+        function editButton() {
+            document.getElementById('fname').value = "";
+            document.getElementById('lname').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('role').value = "";
+        }
+    </script>
+</head>
+<body>
+    <div ng-controller="my_controller">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="pager">
+                        <li class="previous" ng-click="previous()"><a href="#">Previous</a></li>
+                        <li class="next" ng-click="next()"><a href="#">Next</a></li>
+                    </ul>
+                    <div class="col-md-4">
+                        <img src="{{serverObj.profilePic}}" width="150" height="150" style="border:1px">
+                    </div>
+                    <div class="col-md-8 bg-danger" style="border:1px solid red;float: left;position: absolute;left: 220px;top: 80px;">
+                        <label>FirstName:</label>{{serverObj.firstName}}<br>
+                        <label>LastName:</label>{{serverObj.lastName}}<br>
+                        <label>Email:</label>{{serverObj.email}}<br>
+                        <button type="button" data-toggle="modal" data-target="#PostCommentsModal" ng-click="viewButton(serverObj.id)" class="vi">view</button>
+                        <div class="modal fade" id="PostCommentsModal" tabindex="-1"
+                             role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <img src="{{employeDetailsPopup.profilePic}}" height="20" width="20" />
+                                        <h4 class="modal-title" id="myModalLabel">
+                                            {{employeDetailsPopup.firstName}}
+                                        </h4>
+                                    </div>
+                                    <form name="viewForm">
+                                        <div class="modal-body">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">FirstName:</span>
+                                                <input type="text" id="fname" class="form-control" value="{{employeDetailsPopup.firstName}}" />
+                                            </div>&nbsp;
+                                            <div class="input-group">
+                                                <span class="input-group-addon">LastName:</span>
+                                                <input type="text" id="lname" class="form-control" value="{{employeDetailsPopup.lastName}}" />
+                                            </div>&nbsp;
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Email</span>
+                                                <input type="email" id="email" class="form-control" value="{{employeDetailsPopup.email}}" />
+                                            </div>&nbsp;
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Role:</span>
+                                                <input type="text" id="role" class="form-control" value="{{employeDetailsPopup.role}}" />
+                                            </div><br />
+                                            <input type="button" class="btn btn-primary" value="Save" onclick="saveButton()" />
+                                            <input type="button" class="btn btn-primary" value="Edit" onclick="editButton()" />
+                                        </div>
+                                    </form>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
