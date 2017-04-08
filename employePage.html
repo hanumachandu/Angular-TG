@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>EmployePersonalPage</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script>
+        var app = angular.module('app', ['ngStorage']);
+
+        //controller file
+        app.controller('myController', function ($scope, $localStorage) {
+            $scope.id = $localStorage.employeIndexValue;
+            $scope.employeData = $localStorage.employeDetails[$scope.id];
+
+        });
+    </script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery("#editButton").click(function () {
+                jQuery("input[name='employePersonal']").val("");
+                jQuery("#employeImg").removeAttr("src");
+            })
+
+        })
+    </script>
+</head>
+<body ng-controller="myController">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <ul class="pager">
+                    <li class="previous"><a href="AllEmployes.html">Back</a></li>
+
+                </ul>
+                <form name="myForm">
+                    <div class="form-group text-center">
+                        <h2>Company Name</h2>
+                    </div>
+                    <div class="form-group text-center">
+                        <img src="{{employeData.profilePic}}" width="150" height="150" id="employeImg" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="{{employeData.firstName}}" class="form-control"
+                                name="employePersonal" placeholder="Employe FirstName" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="{{employeData.lastName}}" class="form-control"
+                                name="employePersonal" placeholder="Employe LastName" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" value="{{employeData.email}}" class="form-control"
+                                name="employePersonal" placeholder="Employe EmailId" />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" value="{{employeData.role}}" class="form-control"
+                                name="employePersonal" placeholder="Employe Role" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-success btn-block" value="Save" />
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-primary btn-block" value="Edit" id="editButton" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

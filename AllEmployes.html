@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title>AllEmployesPage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script>
+        var app = angular.module('app', ['ngStorage']);
+
+        //controller file;
+        app.controller('my_controller', function ($scope, my_service, $window, $localStorage) {
+            var x = $localStorage.employeIndexValue;
+            $localStorage.employeIndexValue = x;
+            my_service.function1().then(function (response) {
+                $localStorage.employeDetails = response.data.employes;
+                $scope.serverObj = response.data.employes[$localStorage.employeIndexValue];
+            });
+            $scope.previous = function () {
+                if (x > 0) {
+                    x = x - 1;
+                    $localStorage.employeIndexValue = x;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                } else {
+                    x = 4;
+                    $localStorage.employeIndexValue = x;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                };
+            };
+            $scope.next = function () {
+                if (x <= 3) {
+                    x = x + 1;
+                    $localStorage.employeIndexValue = x;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                } else {
+                    x = 0;
+                    $localStorage.employeIndexValue = x;
+                    $scope.serverObj = $localStorage.employeDetails[x];
+                };
+            };
+           
+        });
+
+
+        //service file
+        app.service('my_service', function ($http) {
+            var obj = this;
+            obj.function1 = function () {
+                return $http.get("tsconfig.json").then(function (response) {
+                    return response;
+                })
+            }
+            return obj;
+        });
+    </script>
+</head>
+<body>
+    <div ng-controller="my_controller">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="pager">
+                        <li class="previous" ng-click="previous()"><a href="#">Previous</a></li>
+                        <li class="next" ng-click="next()"><a href="#">Next</a></li>
+                    </ul>
+                    <div class="col-md-4">
+                        <img src="{{serverObj.profilePic}}" width="150" height="150" style="border:1px solid black">
+                    </div>
+                    <div class="col-md-8 bg-danger" style="border:1px solid red;float: left;position: absolute;left: 220px;top: 80px;">
+                        <label>FirstName:</label><span ng-bind="serverObj.firstName"></span><br>
+                        <label>LastName:</label><span ng-bind="serverObj.lastName"></span><br>
+                        <label>Email:</label><span ng-bind="serverObj.email"></span><br>
+                        <a href="employePage.html">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

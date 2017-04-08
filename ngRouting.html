@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+    <style>
+        #mainBlock {
+            width: 80%;
+            height: 600px;
+            position: absolute;
+            left: 10%;
+            background-color: #224455;
+        }
+
+       
+        #navBlock{
+             width: 100%;
+            height: 25px;
+            background-color: #445577;
+            position: relative;
+        }
+
+        #bodyBlock {
+            width: 100%;
+            height: 575px;
+            background-color: #808080;
+            position: relative;
+        }
+
+       
+    </style>
+</head>
+<body>
+    <div id="mainBlock">
+        
+        <div id="navBlock">
+            <a href="#AllEmployes">AllEmployes</a>
+            <a href="#employePage">employePage</a>
+            
+        </div>
+        <div id="bodyBlock">
+            <div ng-view>
+
+            </div>
+
+        </div>
+       
+    </div>
+    
+   
+    <script>
+        var app = angular.module('app', ['ngRoute']);
+
+        //config file
+        app.config(config);
+        config.$inject=['$routeProvider'];
+        function config($routeProvider) {
+            $routeProvider.when('/AllEmployes', {
+                templateUrl: 'AllEmployes.html',
+                
+            })
+                .when('/employePage', {
+                    templateUrl: 'employePage.html',
+                    
+                })
+        };
+    </script>
+</body>
+
+</html>
